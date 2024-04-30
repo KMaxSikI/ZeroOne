@@ -1,229 +1,54 @@
 # # pip install tensorflow keras
 # # pip install pillow
-#
-#
-# import os
-# import tensorflow as tf
-# from tensorflow.keras.applications import MobileNetV2
-# from tensorflow.keras.preprocessing import image
-# from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
-# import numpy as np
-#
-# # Загрузите предобученную модель MobileNetV2 с весами ImageNet
-# model = MobileNetV2(weights='imagenet')
-#
-#
-# def classify_image(image_path):
-#     # Загрузите изображение и преобразуйте его к размерам, подходящим для модели
-#     img = image.load_img(image_path, target_size=(224, 224))
-#
-#     # Преобразуйте изображение в массив numpy и добавьте размерность для пакета данных
-#     img_array = image.img_to_array(img)
-#     img_array = np.expand_dims(img_array, axis=0)
-#
-#     # Предобработка изображения для модели
-#     img_array = preprocess_input(img_array)
-#
-#     # Сделайте предсказание с помощью модели
-#     predictions = model.predict(img_array)
-#
-#     # Расшифруйте предсказания
-#     decoded_predictions = decode_predictions(predictions, top=3)[0]
-#
-#     # Найдите классификацию кошки или собаки в предсказаниях
-#     for prediction in decoded_predictions:
-#         if 'dog' in prediction[0]:
-#             return 'Собака'
-#         elif 'cat' in prediction[0]:
-#             return 'Кошка'
-#
-#     return 'Не удалось определить'
-#
-#
-# # Путь к папке с изображениями
-# image_folder_path = r'C:\Users\vmon_\OneDrive\Изображения\pictures'
-#
-# # Список имен файлов изображений (например, image1.jpg, image2.jpg, и т.д.)
-# image_filenames = [
-#     'cat119.jpg'
-#
-# ]
-#
-# # Пройдемся по каждому изображению и классифицируем его
-# for filename in image_filenames:
-#     # Полный путь к изображению
-#     image_path = os.path.join(image_folder_path, filename)
-#
-#     # Классификация изображения
-#     result = classify_image(image_path)
-#
-#     print(f'Изображение {filename}: {result}')
-#
-#
-# import os
-# import numpy as np
-# import tensorflow as tf
-# from tensorflow.keras.models import Sequential
-# from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
-# from tensorflow.keras.optimizers import Adam
-# from tensorflow.keras.preprocessing.image import ImageDataGenerator
-#
-# # параметры обучения
-# batch_size = 32
-# epochs = 10
-#
-# # путь к папке с изображениями
-# image_dir = 'C:/Users/vmon_/OneDrive/Изображения/pictures'
-#
-# # размер изображений
-# img_rows, img_cols = 224, 224
-#
-# # создание модели CNN
-# model = Sequential()
-# model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(img_rows, img_cols, 3)))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Flatten())
-# model.add(Dense(128, activation='relu'))
-# model.add(Dense(2, activation='softmax'))
-#
-# # компиляция модели
-# model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
-#
-# # генерация обучающих данных
-# train_datagen = ImageDataGenerator(rescale=1./255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
-# train_generator = train_datagen.flow_from_directory(image_dir, target_size=(img_rows, img_cols), batch_size=batch_size, class_mode='categorical', subset='training')
-#
-# # обучение модели
-# model.fit(train_generator, steps_per_epoch=train_generator.samples // batch_size, epochs=epochs)
-#
-# # сохранение обученной модели
-# model.save('my_model.h5')
-#
-# # генерация тестовых данных
-# test_datagen = ImageDataGenerator(rescale=1./255)
-# test_generator = test_datagen.flow_from_directory(image_dir, target_size=(img_rows, img_cols), batch_size=batch_size, class_mode='categorical', subset='validation')
-#
-# # оценка модели на тестовых данных
-# test_loss, test_acc = model.evaluate(test_generator, steps=test_generator.samples // batch_size)
-# print('Test accuracy:', test_acc)
-#
-# # обход всех файлов в папке
-# for filename in os.listdir(image_dir):
-#     # пропуск неизображений
-#     if not filename.endswith('.jpg') and not filename.endswith('.png'):
-#         continue
-#     # загрузка изображения
-#     img = tf.keras.preprocessing.image.load_img(os.path.join(image_dir, filename), target_size=(img_rows, img_cols))
-#     # предобработка изображения
-#     img = tf.keras.preprocessing.image.img_to_array(img) / 255.0
-#     img = np.expand_dims(img, axis=0)
-#     # предсказание класса
-#     pred = model.predict(img)
-#     # определение класса
-#     if pred[0][0] > pred[0][1]:
-#         print(filename, ': кошка')
-#     else:
-#         print(filename, ': собака')
-#
-# import os
-# import tensorflow as tf
-# from tensorflow.keras.applications import VGG16
-# from tensorflow.keras.preprocessing import image
-# from tensorflow.keras.applications.vgg16 import preprocess_input, decode_predictions
-# import numpy as np
-#
-# # Загрузите предобученную модель VGG16 с весами ImageNet
-# model = VGG16(weights='imagenet')
-#
-#
-# def classify_image(image_path):
-#     # Загрузите изображение и преобразуйте его к размерам, подходящим для модели
-#     img = image.load_img(image_path, target_size=(224, 224))
-#
-#     # Преобразуйте изображение в массив numpy и добавьте размерность для пакета данных
-#     img_array = image.img_to_array(img)
-#     img_array = np.expand_dims(img_array, axis=0)
-#
-#     # Предобработка изображения для модели
-#     img_array = preprocess_input(img_array)
-#
-#     # Сделайте предсказание с помощью модели
-#     predictions = model.predict(img_array)
-#
-#     # Расшифруйте предсказания
-#     decoded_predictions = decode_predictions(predictions, top=3)[0]
-#
-#     # Найдите классификацию кошки или собаки в предсказаниях
-#     for prediction in decoded_predictions:
-#         if 'dog' in prediction[0]:
-#             return 'Собака'
-#         elif 'cat' in prediction[0]:
-#             return 'Кошка'
-#
-#     return 'Не удалось определить'
-#
-#
-# # Путь к папке с изображениями
-# image_folder_path = r'C:\Users\vmon_\OneDrive\Изображения\pictures'
-#
-# # Список имен файлов изображений (например, image1.jpg, image2.jpg, и т.д.)
-# image_filenames = [
-#     'cat119.jpg',
-#     'dog119.jpg',
-#     'cat120.jpg',
-#     'cat121.jpg',
-#     'cat.jpg'
-#
-# ]
-#
-# # Пройдемся по каждому изображению и классифицируем его
-# for filename in image_filenames:
-#     # Полный путь к изображению
-#     image_path = os.path.join(image_folder_path, filename)
-#
-#     # Классификация изображения
-#     result = classify_image(image_path)
-#
-#     print(f'Изображение {filename}: {result}')
 
-import os
-import numpy as np
-import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-# параметры обучения
-batch_size = 32
-epochs = 5
+# Импорт необходимых библиотек и модулей
+import os  # Работа с файловой системой и путями
+import numpy as np  # Работа с массивами данных и численными операциями
+import tensorflow as tf  # Основная библиотека для машинного обучения
+from tensorflow.keras.models import Sequential  # Импорт класса для создания последовательной модели
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense  # Импорт слоев для архитектуры модели
+from tensorflow.keras.optimizers import Adam  # Импорт оптимизатора Adam
+from tensorflow.keras.preprocessing.image import ImageDataGenerator  # Импорт класса для генерации данных изображений
 
-# путь к папке с изображениями
-train_dir = 'E:/PycharmProjects/another_PJ/ZeroOne/base/train'
-test_dir = 'E:/PycharmProjects/another_PJ/ZeroOne/base/test'
+# Определение параметров обучения
+batch_size = 32  # Размер партии данных для каждой итерации обучения
+epochs = 5  # Количество эпох обучения (проходов по обучающему набору данных)
 
-# размер изображений
-img_rows, img_cols = 224, 224
+# Путь к папке с изображениями для обучения и тестирования
+train_dir = 'E:/PycharmProjects/another_PJ/ZeroOne/base/train'  # Папка с обучающими данными
+test_dir = 'E:/PycharmProjects/another_PJ/ZeroOne/base/test'  # Папка с тестовыми данными
+
+# Определение размера изображений для входа в модель
+img_rows, img_cols = 224, 224  # Ширина и высота изображений в пикселях
 
 # создание модели CNN
 model = Sequential()
-model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(img_rows, img_cols, 3)))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Flatten())
-model.add(Dense(128, activation='relu'))
-model.add(Dense(2, activation='softmax'))
+model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(img_rows, img_cols, 3)))  # Добавление первого слоя сверточной сети (Conv2D) с 32 фильтрами, размером ядра 3x3 и активацией ReLU
+# Указывается входная форма изображения (img_rows, img_cols, 3)
+model.add(MaxPooling2D(pool_size=(2, 2)))  # Добавление слоя объединения (MaxPooling2D) с размером пула 2x2 для уменьшения размерности изображения
+model.add(Conv2D(64, kernel_size=(3, 3), activation='relu')) # Добавление второго слоя сверточной сети (Conv2D) с 64 фильтрами, размером ядра 3x3 и активацией ReLU
+model.add(MaxPooling2D(pool_size=(2, 2))) # Добавление второго слоя объединения (MaxPooling2D) с размером пула 2x2
+model.add(Flatten()) # Преобразование данных в одномерный вектор для передачи в полносвязные слои
+model.add(Dense(128, activation='relu')) # Добавление полносвязного слоя с 128 нейронами и активацией ReLU
+model.add(Dense(2, activation='softmax')) # Добавление выходного слоя с 2 нейронами для классификации на 2 класса (кошки и собаки) с активацией softmax
 
-# компиляция модели
+# Компиляция модели с функцией потерь 'categorical_crossentropy' для задачи классификации на несколько классов
+# Используется оптимизатор Adam с заданной скоростью обучения (learning_rate=0.001)
+# В качестве метрики для оценки модели используется точность (accuracy)
 model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
 
-# генерация обучающих данных
-train_datagen = ImageDataGenerator(rescale=1./255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
+# Создание объекта генератора данных для обучения
+# Этот объект позволяет применять аугментацию данных для увеличения разнообразия обучающих изображений
+# Параметр rescale=1./255 используется для масштабирования значений пикселей из диапазона [0, 255] в [0, 1]
+# Параметры shear_range=0.2, zoom_range=0.2 и horizontal_flip=True указывают на случайные преобразования для аугментации данных
+train_datagen = ImageDataGenerator(rescale=1. / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
 
-# генератор данных для обучения
+# Создание генератора данных для обучения с использованием объекта train_datagen
+# Путь к папке с обучающими данными указывается в train_dir
+# Параметр target_size=(img_rows, img_cols) задает размерность изображений
+# Параметр batch_size указывает на размер батча (количество изображений, обрабатываемых за один раз)
+# Параметр class_mode='categorical' указывает, что метки классов в данных представлены в формате one-hot encoding
 train_generator = train_datagen.flow_from_directory(
     train_dir,
     target_size=(img_rows, img_cols),
@@ -231,19 +56,31 @@ train_generator = train_datagen.flow_from_directory(
     class_mode='categorical'
 )
 
-# расчет количества шагов на эпоху
+# Расчет количества шагов на эпоху (steps_per_epoch)
+# Оно вычисляется как целочисленное деление общего числа образцов в train_generator (train_generator.samples) на размер батча (batch_size)
+# Этот параметр определяет, сколько итераций (шагов) должно быть выполнено за одну эпоху обучения
 steps_per_epoch = train_generator.samples // batch_size
 
 # обучение модели
 for epoch in range(epochs):
-    train_generator.reset()  # Сброс генератора данных
+    train_generator.reset()  # Сброс генератора данных, чтобы начать каждую эпоху заново
+    # Обучение модели с использованием генератора данных train_generator
+    # Указывается количество шагов на эпоху (steps_per_epoch) и количество эпох (1)
     model.fit(train_generator, steps_per_epoch=steps_per_epoch, epochs=1)
 
-# сохранение обученной модели в формате Keras
+# Сохранение обученной модели в формате Keras
+# Файл модели будет сохранен в текущем каталоге с именем 'my_model.keras'
 model.save('my_model.keras')
 
-# генерация тестовых данных
-test_datagen = ImageDataGenerator(rescale=1./255)
+# Создание объекта генератора тестовых данных
+# Параметр rescale=1./255 используется для масштабирования значений пикселей из диапазона [0, 255] в [0, 1]
+test_datagen = ImageDataGenerator(rescale=1. / 255)
+
+# Создание генератора данных для тестирования с использованием объекта test_datagen
+# Путь к папке с тестовыми данными указывается в test_dir
+# Параметр target_size=(img_rows, img_cols) задает размерность изображений
+# Параметр batch_size указывает на размер батча (количество изображений, обрабатываемых за один раз)
+# Параметр class_mode='categorical' указывает, что метки классов в данных представлены в формате one-hot encoding
 test_generator = test_datagen.flow_from_directory(
     test_dir,
     target_size=(img_rows, img_cols),
@@ -251,30 +88,29 @@ test_generator = test_datagen.flow_from_directory(
     class_mode='categorical'
 )
 
-# оценка модели на тестовых данных
+# Оценка модели на тестовых данных
+# Функция model.evaluate() оценивает модель на тестовом наборе данных test_generator
+# Аргумент steps указывает количество шагов (батчей) для выполнения оценки: деление общего числа образцов в тестовом наборе (test_generator.samples) на размер батча (batch_size)
 test_loss, test_acc = model.evaluate(test_generator, steps=test_generator.samples // batch_size)
 print('Test accuracy:', test_acc)
 
-# обход всех файлов в папке
+
+# Обходит папки cats и dogs в директории test_dir
 for subdir in ['cats', 'dogs']:  # Обход папок cats и dogs в директории test_dir
-    subdir_path = os.path.join(test_dir, subdir)
+    subdir_path = os.path.join(test_dir, subdir) # Строит путь к каждой папке (cats, dogs)
     for filename in os.listdir(subdir_path):
-        # пропуск неизображений
-        if not filename.endswith(('.jpg', '.png')):
+        if not filename.endswith(('.jpg', '.png')): # Пропускает файлы, которые не являются изображениями
             continue
-        # загрузка изображения
+        # Загрузка и изменение размера изображения до (img_rows, img_cols)
         img = tf.keras.preprocessing.image.load_img(
             os.path.join(subdir_path, filename),
             target_size=(img_rows, img_cols)
         )
-        # предобработка изображения
-        img = tf.keras.preprocessing.image.img_to_array(img) / 255.0
-        img = np.expand_dims(img, axis=0)
-        # предсказание класса
-        pred = model.predict(img)
-        # определение класса
-        if pred[0][0] > pred[0][1]:
-            print(filename, ': кошка')
-        else:
-            print(filename, ': собака')
 
+        img = tf.keras.preprocessing.image.img_to_array(img) / 255.0 # Преобразует изображение в массив NumPy и масштабирует его в диапазон [0, 1]
+        img = np.expand_dims(img, axis=0) # Добавляет ось к массиву, чтобы сделать его соответствующим размерности (1, img_rows, img_cols, 3)
+        pred = model.predict(img) # Предсказание класса для изображения
+        if pred[0][0] > pred[0][1]: # Сравнивает значения вероятностей для классов "cats" и "dogs"
+            print(filename, ': кошка') # Выводит имя файла и определенный класс "кошка"
+        else:
+            print(filename, ': собака') # Выводит имя файла и определенный класс "собака"
